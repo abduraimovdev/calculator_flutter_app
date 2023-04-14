@@ -4,7 +4,7 @@ class ArithmeticCalculator extends ArithmeticCalculatorI {
   double? calculate(String text) {
     if (RegExp(r'[A-Za-z]').hasMatch(text)) return null;
 
-    return double.tryParse(f('+', f('-', f('*', f('/', text)))));
+    return double.tryParse(f('+', f('-', f('*', f('/', f('%', text))))));
   }
 }
 
@@ -46,6 +46,7 @@ abstract class ArithmeticCalculatorI {
   }
 
   double _doCalc(double a, double b, String operation) {
+    if (operation == '%') return a*(b/100);
     if (operation == '/') return a / b;
     if (operation == '*') return a * b;
     if (operation == '-') return a - b;
