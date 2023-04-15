@@ -1,3 +1,4 @@
+import 'package:calculator/service/arithmetic_calculator.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorPage extends StatefulWidget {
@@ -8,9 +9,23 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
-  String son = "8";
-  String history =
-      "2+2=4\n4+4=82+2=4\n4+4=82+2=4\n4+4=82+2=4\n4+4=82+2=4\n4+4=8";
+  void addSymbol(String symbol) {
+    setState(() {
+      if (symbol == ".") {
+        if (son.contains(".")) return;
+      }
+      if (int.tryParse(symbol) != null && son == "0") {
+        son = symbol.trim();
+      } else {
+        son += symbol.trim();
+      }
+    });
+  }
+
+  bool historyBool = false;
+  String son = "0";
+  String history = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,17 +48,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Container(
-                          alignment: Alignment.bottomRight,
-                          width: 300,
-                          child: Text(
-                            history,
-                            style: const TextStyle(
-                              fontSize: 30,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                        historyBool
+                            ? Container(
+                                alignment: Alignment.bottomRight,
+                                width: 300,
+                                child: Text(
+                                  history,
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ) : const SizedBox(
+                                height: 20,
+                              ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -94,7 +112,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                 setState(() {
                                   if (son != "0") {
                                     son = son.substring(0, son.length - 1);
-                                  } 
+                                  }
                                   if (son.isEmpty) {
                                     son = "0";
                                   }
@@ -117,11 +135,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             ),
                           ),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("%"),
                               name: "%",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("/"),
                               name: "/",
                               color: Colors.orange),
                         ],
@@ -132,19 +150,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("7"),
                               name: "7",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("8"),
                               name: "8",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("9"),
                               name: "9",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("*"),
                               name: "*",
                               color: Colors.orange),
                         ],
@@ -155,19 +173,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("4"),
                               name: "4",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("5"),
                               name: "5",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("6"),
                               name: "6",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("-"),
                               name: "-",
                               color: Colors.orange),
                         ],
@@ -178,19 +196,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("1"),
                               name: "1",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("2"),
                               name: "2",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("3"),
                               name: "3",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("+"),
                               name: "+",
                               color: Colors.orange),
                         ],
@@ -200,20 +218,53 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       flex: 1,
                       child: Row(
                         children: [
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (historyBool) {
+                                    historyBool = false;
+                                  } else {
+                                    historyBool = true;
+                                  }
+                                });
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: double.maxFinite,
+                                  color: Colors.white,
+                                  child: const Icon(
+                                    Icons.history,
+                                    size: 40,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                           MyButton(
-                              onPressed: () {}, name: "", color: Colors.orange),
-                          MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("0"),
                               name: "0",
                               color: Colors.orange),
                           MyButton(
-                              onPressed: () {},
+                              onPressed: () => addSymbol("."),
                               name: ".",
                               color: Colors.orange),
                           Expanded(
                             flex: 1,
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                setState(() {
+                                  history +=
+                                      "\n$son=${const ArithmeticCalculator().calculate(son)}";
+                                  son =
+                                      "${const ArithmeticCalculator().calculate(son)}";
+                                });
+                              },
                               child: Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -221,8 +272,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                   alignment: Alignment.center,
                                   height: double.maxFinite,
                                   decoration: BoxDecoration(
-                                      color: Colors.orange,
-                                      borderRadius: BorderRadius.circular(50)),
+                                    color: Colors.orange,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
                                   child: const Text(
                                     "=",
                                     style: TextStyle(
@@ -253,12 +305,12 @@ class MyButton extends StatelessWidget {
   final String name;
   final Color color;
 
-  const MyButton(
-      {Key? key,
-      required this.onPressed,
-      required this.name,
-      required this.color})
-      : super(key: key);
+  const MyButton({
+    Key? key,
+    required this.onPressed,
+    required this.name,
+    required this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
