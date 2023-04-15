@@ -1,5 +1,6 @@
-import 'package:calculator/service/arithmetic_calculator.dart';
+import 'package:calculator/service/calc.dart';
 import 'package:flutter/material.dart';
+import '../service/buttons.dart';
 
 class CalculatorPage extends StatefulWidget {
   const CalculatorPage({super.key});
@@ -9,22 +10,17 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
-  void addSymbol(String symbol) {
-    setState(() {
-      if (symbol == ".") {
-        if (son.contains(".")) return;
-      }
-      if (int.tryParse(symbol) != null && son == "0") {
-        son = symbol.trim();
-      } else {
-        son += symbol.trim();
-      }
-    });
-  }
+  Calc calc = Calc();
+  void viewAnswer() => setState(calc.viewAnswer);
 
-  bool historyBool = false;
-  String son = "0";
-  String history = "";
+  void viewHistory() => setState(calc.viewHistory);
+
+  void back() => setState(calc.back);
+
+  void clear() => setState(calc.clear);
+
+  void addNumber(String number) => setState(() => calc.addNumber(number));
+  void addSymbol(String symbol) => setState(() => calc.addSymbol(symbol));
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +28,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 1,
+            flex: 3,
             child: Container(
               color: Colors.white,
               alignment: Alignment.bottomRight,
               child: Container(
                 width: double.infinity,
                 height: 250,
+                color: Colors.white,
                 alignment: Alignment.bottomRight,
                 child: SingleChildScrollView(
                   reverse: true,
@@ -48,29 +45,30 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        historyBool
+                        Calc.historyBool
                             ? Container(
                                 alignment: Alignment.bottomRight,
                                 width: 300,
                                 child: Text(
-                                  history,
+                                  Calc.history,
                                   style: const TextStyle(
                                     fontSize: 30,
                                     color: Colors.black,
                                   ),
                                 ),
-                              ) : const SizedBox(
+                              )
+                            : const SizedBox(
                                 height: 20,
                               ),
                         const SizedBox(
                           height: 20,
                         ),
                         Text(
-                          son,
+                          Calc.input,
                           style: TextStyle(
-                            fontSize: son.length < 12
+                            fontSize: Calc.input.length < 12
                                 ? 70
-                                : (son.length < 26 ? 50 : 30),
+                                : (Calc.input.length < 26 ? 50 : 30),
                             color: Colors.black,
                           ),
                         ),
@@ -85,7 +83,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           // Calc Number Buttons, --------------------------
 
           Expanded(
-            flex: 2,
+            flex: 5,
             child: Padding(
               padding:
                   const EdgeInsets.only(bottom: 20, left: 5, right: 5, top: 5),
@@ -98,193 +96,133 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                              onPressed: () {
-                                setState(() {
-                                  son = "0";
-                                });
-                              },
-                              name: "C",
-                              color: Colors.orange),
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (son != "0") {
-                                    son = son.substring(0, son.length - 1);
-                                  }
-                                  if (son.isEmpty) {
-                                    son = "0";
-                                  }
-                                });
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: double.maxFinite,
-                                  color: Colors.white,
-                                  child: const Icon(
-                                    Icons.backspace_outlined,
-                                    size: 40,
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            onPressed: clear,
+                            name: "C",
+                            color: Colors.orange,
+                          ),
+                          MyIconButton(
+                            icon: Icons.backspace_outlined,
+                            onPressed: back,
+                            color: Colors.orange,
                           ),
                           MyButton(
-                              onPressed: () => addSymbol("%"),
-                              name: "%",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("/"),
-                              name: "/",
-                              color: Colors.orange),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          MyButton(
-                              onPressed: () => addSymbol("7"),
-                              name: "7",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("8"),
-                              name: "8",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("9"),
-                              name: "9",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("*"),
-                              name: "*",
-                              color: Colors.orange),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          MyButton(
-                              onPressed: () => addSymbol("4"),
-                              name: "4",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("5"),
-                              name: "5",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("6"),
-                              name: "6",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("-"),
-                              name: "-",
-                              color: Colors.orange),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          MyButton(
-                              onPressed: () => addSymbol("1"),
-                              name: "1",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("2"),
-                              name: "2",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("3"),
-                              name: "3",
-                              color: Colors.orange),
-                          MyButton(
-                              onPressed: () => addSymbol("+"),
-                              name: "+",
-                              color: Colors.orange),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (historyBool) {
-                                    historyBool = false;
-                                  } else {
-                                    historyBool = true;
-                                  }
-                                });
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: double.maxFinite,
-                                  color: Colors.white,
-                                  child: const Icon(
-                                    Icons.history,
-                                    size: 40,
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            onPressed: () => addSymbol("%"),
+                            name: "%",
+                            color: Colors.orange,
                           ),
                           MyButton(
-                              onPressed: () => addSymbol("0"),
-                              name: "0",
-                              color: Colors.orange),
+                            onPressed: () => addSymbol("/"),
+                            name: "/",
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: [
                           MyButton(
-                              onPressed: () => addSymbol("."),
-                              name: ".",
-                              color: Colors.orange),
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  history +=
-                                      "\n$son=${const ArithmeticCalculator().calculate(son)}";
-                                  son =
-                                      "${const ArithmeticCalculator().calculate(son)}";
-                                });
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: const Text(
-                                    "=",
-                                    style: TextStyle(
-                                      fontSize: 40,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            onPressed: () => addNumber("7"),
+                            name: "7",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("8"),
+                            name: "8",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("9"),
+                            name: "9",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addSymbol("*"),
+                            name: "*",
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: [
+                          MyButton(
+                            onPressed: () => addNumber("4"),
+                            name: "4",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("5"),
+                            name: "5",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("6"),
+                            name: "6",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addSymbol("-"),
+                            name: "-",
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: [
+                          MyButton(
+                            onPressed: () => addNumber("1"),
+                            name: "1",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("2"),
+                            name: "2",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("3"),
+                            name: "3",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addSymbol("+"),
+                            name: "+",
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: [
+                          MyIconButton(
+                            onPressed: viewHistory,
+                            icon: Icons.history,
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("0"),
+                            name: "0",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: () => addNumber("."),
+                            name: ".",
+                            color: Colors.orange,
+                          ),
+                          MyButton(
+                            onPressed: viewAnswer,
+                            name: "=",
+                            color: Colors.white,
+                            backgroundColor: Colors.orange,
                           ),
                         ],
                       ),
@@ -295,44 +233,6 @@ class _CalculatorPageState extends State<CalculatorPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class MyButton extends StatelessWidget {
-  final void Function() onPressed;
-  final String name;
-  final Color color;
-
-  const MyButton({
-    Key? key,
-    required this.onPressed,
-    required this.name,
-    required this.color,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-          child: Container(
-            alignment: Alignment.center,
-            height: double.maxFinite,
-            color: Colors.white,
-            child: Text(
-              name,
-              style: TextStyle(
-                fontSize: 40,
-                color: color,
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

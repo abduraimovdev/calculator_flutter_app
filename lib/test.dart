@@ -1,3 +1,9 @@
+void main() {
+  ArithmeticCalculator calc = ArithmeticCalculator();
+
+  print(calc.calculate("-1+2"));
+}
+
 class ArithmeticCalculator extends ArithmeticCalculatorI {
   const ArithmeticCalculator();
 
@@ -25,7 +31,7 @@ abstract class ArithmeticCalculatorI {
       text = text.replaceFirstMapped(
           RegExp('([-]?\\d*\\.?\\d+[$operation]\\d*\\.?\\d+)'), (match) {
         List<String>? splitedText = match.group(1)?.split(operation);
-
+        print(splitedText);
         // if list is null
         if (splitedText == null) return '';
 
