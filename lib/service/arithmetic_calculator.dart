@@ -22,8 +22,12 @@ abstract class ArithmeticCalculatorI {
       // removes all (+-) conflicts
       if (operation == "-") text = text.replaceAll('+-', '-');
 
-      text = text.replaceFirstMapped(
-          RegExp('([-]?\\d*\\.?\\d+[$operation]\\d*\\.?\\d+)'), (match) {
+      final numberFinder = RegExp('[-]?\\d*\\.?\\d+[$operation]\\d*\\.?\\d+');
+
+      // if text not match with operator just return text
+      if (!numberFinder.hasMatch(text)) return text;
+
+      text = text.replaceFirstMapped(numberFinder, (match) {
         List<String>? splitedText = match.group(1)?.split(operation);
 
         // if list is null
