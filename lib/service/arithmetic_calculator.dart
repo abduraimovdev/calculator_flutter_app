@@ -1,26 +1,25 @@
 class ArithmeticCalculator extends ArithmeticCalculatorI {
   const ArithmeticCalculator();
 
-  String? calculate(String text) {
+  double? calculate(String text, [String Function(String, String)? f]) {
     if (RegExp(r'[A-Za-z]').hasMatch(text)) return null;
 
-    return f('+', f('-', f('*', f('/', f('%', text)))));
+    f ??= fCalculator;
+
+    return double.tryParse(f('+', f('-', f('*', f('/', f('%', text))))));
   }
 }
 
 abstract class ArithmeticCalculatorI {
   const ArithmeticCalculatorI();
 
-  String f(
-    String operation,
-    String text, [
-    double Function(double, double, String)? calc,
-  ]) {
+  String fCalculator(String operation, String text,
+      [double Function(double, double, String)? calc]) {
     calc ??= _doCalc;
 
     while (text.contains(operation)) {
       // removes all (+-) conflicts
-      if (operation == "-") text = text.replaceAll('+-', '-');
+      if (operation == '-') text = text.replaceAll('+-', '-');
 
       final numberFinder = RegExp('[-]?\\d*\\.?\\d+[$operation]\\d*\\.?\\d+');
 
@@ -28,19 +27,19 @@ abstract class ArithmeticCalculatorI {
       if (!numberFinder.hasMatch(text)) return text;
 
       text = text.replaceFirstMapped(numberFinder, (match) {
-        List<String>? splitedText = match.group(1)?.split(operation);
+        List<String>? splitedText = match.group(0)?.split(operation);
 
         // if list is null
         if (splitedText == null) return '';
 
-        // it works in case => (-3-1) -> it splits => ['', '3', '1'], operation is -> "-"
+        // it works in case => (-3-1) -> it splits => ['', '3', '1'], operation is -> '-'
         // we must delete ('') in -> ['', '3', '1'] and replase ('3') to ('-3')
         if (splitedText.contains('')) {
           splitedText.remove('');
-          splitedText[0] = "-${splitedText[0]}";
+          splitedText[0] = '-${splitedText[0]}';
         }
 
-        return "${splitedText.map((e) => double.parse(e)).reduce((a, b) => calc!(a, b, operation))}";
+        return '${splitedText.map(double.parse).reduce((a, b) => calc!(a, b, operation))}';
       });
 
       if (double.tryParse(text) != null) return text;

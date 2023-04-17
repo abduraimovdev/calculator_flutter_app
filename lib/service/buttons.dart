@@ -20,17 +20,25 @@ class MyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 1,
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+        child: TextButton(
+          onPressed: onPressed,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith(
+              (states) => (states.contains(MaterialState.pressed))
+                  ? Colors.orange.withOpacity(0.1)
+                  : backgroundColor,
+            ),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+            ),
+          ),
           child: Container(
             alignment: Alignment.center,
             height: double.maxFinite,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(50),
-            ),
             child: Text(
               name,
               style: TextStyle(
@@ -63,20 +71,56 @@ class MyIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 1,
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+        child: TextButton(
+          onPressed: onPressed,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith(
+              (states) => (states.contains(MaterialState.pressed))
+                  ? Colors.orange.withOpacity(0.1)
+                  : Colors.white,
+            ),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+            ),
+          ),
           child: Container(
             alignment: Alignment.center,
             height: double.maxFinite,
-            color: Colors.white,
             child: Icon(
               icon,
               size: 40,
               color: color,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// AnswerButtons -----------------------------
+class AnswerButton extends StatelessWidget {
+  final void Function() onPressed;
+  final String name;
+  const AnswerButton({
+    super.key,
+    required this.onPressed,
+    required this.name,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      child: Text(
+        name,
+        style: const TextStyle(
+          fontSize: 30,
+          color: Colors.black,
         ),
       ),
     );

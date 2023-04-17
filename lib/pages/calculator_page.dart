@@ -22,6 +22,24 @@ class _CalculatorPageState extends State<CalculatorPage> {
   void addNumber(String number) => setState(() => calc.addNumber(number));
   void addSymbol(String symbol) => setState(() => calc.addSymbol(symbol));
 
+  List<AnswerButton> answers() {
+    List<AnswerButton> result = [];
+    for (var data in Calc.dataHistory.entries) {
+      String answer = "${data.value[0]}=${data.value[1]}";
+      result.add(
+        AnswerButton(
+          name: answer,
+          onPressed: () {
+            setState(() {
+              Calc.input = data.value[0];
+            });
+          },
+        ),
+      );
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +58,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 child: SingleChildScrollView(
                   reverse: true,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(right: 10, left: 20, bottom: 10),
+                    padding: const EdgeInsets.only(
+                      right: 10,
+                      left: 20,
+                      bottom: 10,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -49,12 +70,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             ? Container(
                                 alignment: Alignment.bottomRight,
                                 width: 300,
-                                child: Text(
-                                  Calc.history,
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    color: Colors.black,
-                                  ),
+                                child: Column(
+                                  children: answers(),
                                 ),
                               )
                             : const SizedBox(
@@ -85,8 +102,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
           Expanded(
             flex: 5,
             child: Padding(
-              padding:
-                  const EdgeInsets.only(bottom: 20, left: 5, right: 5, top: 5),
+              padding: const EdgeInsets.only(
+                bottom: 20,
+                left: 5,
+                right: 5,
+                top: 5,
+              ),
               child: Container(
                 color: Colors.white,
                 child: Column(
@@ -96,8 +117,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                            onPressed: clear,
                             name: "C",
+                            onPressed: clear,
                             color: Colors.orange,
                           ),
                           MyIconButton(
@@ -106,13 +127,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addSymbol("%"),
                             name: "%",
+                            onPressed: () => addSymbol("%"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addSymbol("/"),
                             name: "/",
+                            onPressed: () => addSymbol("/"),
                             color: Colors.orange,
                           ),
                         ],
@@ -123,23 +144,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                            onPressed: () => addNumber("7"),
                             name: "7",
+                            onPressed: () => addNumber("7"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("8"),
                             name: "8",
+                            onPressed: () => addNumber("8"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("9"),
                             name: "9",
+                            onPressed: () => addNumber("9"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addSymbol("*"),
                             name: "*",
+                            onPressed: () => addSymbol("*"),
                             color: Colors.orange,
                           ),
                         ],
@@ -150,23 +171,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                            onPressed: () => addNumber("4"),
                             name: "4",
+                            onPressed: () => addNumber("4"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("5"),
                             name: "5",
+                            onPressed: () => addNumber("5"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("6"),
                             name: "6",
+                            onPressed: () => addNumber("6"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addSymbol("-"),
                             name: "-",
+                            onPressed: () => addSymbol("-"),
                             color: Colors.orange,
                           ),
                         ],
@@ -177,23 +198,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyButton(
-                            onPressed: () => addNumber("1"),
                             name: "1",
+                            onPressed: () => addNumber("1"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("2"),
                             name: "2",
+                            onPressed: () => addNumber("2"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("3"),
                             name: "3",
+                            onPressed: () => addNumber("3"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addSymbol("+"),
                             name: "+",
+                            onPressed: () => addSymbol("+"),
                             color: Colors.orange,
                           ),
                         ],
@@ -204,23 +225,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: Row(
                         children: [
                           MyIconButton(
-                            onPressed: viewHistory,
                             icon: Icons.history,
+                            onPressed: viewHistory,
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("0"),
                             name: "0",
+                            onPressed: () => addNumber("0"),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: () => addNumber("."),
                             name: ".",
+                            onPressed: () => addNumber("."),
                             color: Colors.orange,
                           ),
                           MyButton(
-                            onPressed: viewAnswer,
                             name: "=",
+                            onPressed: viewAnswer,
                             color: Colors.white,
                             backgroundColor: Colors.orange,
                           ),
@@ -237,3 +258,22 @@ class _CalculatorPageState extends State<CalculatorPage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+// Container(
+//                                 alignment: Alignment.bottomRight,
+//                                 width: 300,
+//                                 child: Text(
+//                                   Calc.history,
+//                                   style: const TextStyle(
+//                                     fontSize: 30,
+//                                     color: Colors.black,
+//                                   ),
+//                                 ),
+//                               )
